@@ -96,14 +96,11 @@ const businessSchema = {
   };
   document.documentElement.setAttribute('data-theme', getTheme());
 
-  // Handle pull-to-refresh prevention in embedded contexts
+  // Mark embedded contexts so CSS can opt out of overscroll containment.
+  // In the captive-portal iframe the parent page owns scrolling, so we must
+  // let touch scroll chain through us instead of trapping it here.
   if (window.self !== window.top) {
     document.documentElement.classList.add('is-embedded');
-    window.addEventListener('load', () => {
-      if (window.scrollY === 0) {
-        window.scrollTo(0, 1);
-      }
-    }, { once: true });
   }
 </script>
 

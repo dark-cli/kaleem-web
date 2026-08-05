@@ -39,18 +39,19 @@ html[data-theme='dark'] {
   }
 }
 
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overscroll-behavior-y: contain;
-}
-
-body {
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: "Tajawal", sans-serif;
+}
+
+/* Prevent native pull-to-refresh when visited standalone. When embedded in a
+   captive-portal iframe, the parent page owns scrolling — we must NOT contain
+   overscroll here or touch scroll can't chain up to the parent's scroll
+   container, and the page becomes unscrollable. */
+html:not(.is-embedded),
+html:not(.is-embedded) body {
   overscroll-behavior-y: contain;
 }
 
