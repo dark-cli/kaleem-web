@@ -34,35 +34,16 @@ html[data-theme='dark'] .theme-icon.sun { display: inline; }
 </style>
 
 <script is:inline>
-  const getTheme = () => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  };
-
-  const setTheme = (theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('theme', theme);
-    }
-  };
-
-  // Add event listener to the button
   document.addEventListener('DOMContentLoaded', () => {
-    // Set theme on initial load
-    const initialTheme = getTheme();
-    setTheme(initialTheme);
-
     const buttons = document.querySelectorAll('.theme-toggle-btn');
     buttons.forEach(button => {
       button.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('theme', newTheme);
+        }
       });
     });
   });

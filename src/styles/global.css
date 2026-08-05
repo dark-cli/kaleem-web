@@ -39,11 +39,19 @@ html[data-theme='dark'] {
   }
 }
 
-html, body { /* Added */
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overscroll-behavior-y: contain;
+}
+
+body {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: "Tajawal", sans-serif;
+  overscroll-behavior-y: contain;
 }
 
 body {
