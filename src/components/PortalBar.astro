@@ -1,0 +1,95 @@
+---
+// Captive-portal "Connect to Internet" bar. Hidden by default; revealed only
+// when the page is loaded with ?portal=1.
+import en from '../i18n/en.json';
+import ar from '../i18n/ar.json';
+const locale = Astro.currentLocale;
+const t = locale === 'ar' ? ar : en;
+---
+
+<div id="portal-bar" role="region" aria-label={t['portal.connect']}>
+  <div id="portal-error" hidden></div>
+  <button id="portal-connect" type="button">{t['portal.connect']}</button>
+</div>
+
+<script is:inline>
+  (function () {
+    var isPortal = new URLSearchParams(location.search).get('portal') === '1';
+    if (!isPortal) return;
+
+    document.documentElement.classList.add('is-portal');
+
+    // Parameters arrive in the hash so the MAC address / login URL never hit
+    // kaleem.dev's server logs.
+    var params = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    var loginUrl = params.get('loginUrl') || '';
+    var mac = params.get('mac') || '';
+    var target = params.get('target') || '';
+    var error = params.get('error') || '';
+
+    var bar = document.getElementById('portal-bar');
+    var errEl = document.getElementById('portal-error');
+    var btn = document.getElementById('portal-connect');
+    if (!bar || !btn) return;
+
+    if (error && error.trim().length > 0) {
+      errEl.textContent = error;
+      errEl.hidden = false;
+    }
+
+    // Reserve space at the bottom so the fixed bar doesn't cover content.
+    document.body.style.paddingBottom =
+      'calc(env(safe-area-inset-bottom, 0px) + 96px)';
+
+    btn.addEventListener('click', function () {
+      if (!loginUrl) return;
+      var url = loginUrl
+        + (loginUrl.indexOf('?') >= 0 ? '&' : '?')
+        + 'dst=' + encodeURIComponent(target)
+        + '&username=T-' + encodeURIComponent(mac);
+      window.location.href = url;
+    });
+  })();
+</script>
+
+<style>
+  #portal-bar {
+    display: none;
+  }
+  :global(html.is-portal) #portal-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1em calc(env(safe-area-inset-bottom, 0px) + 0.75em);
+    background: #111;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.35);
+  }
+  #portal-error {
+    color: #ff5252;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+    max-width: 90%;
+  }
+  #portal-connect {
+    background: #00c853;
+    color: #fff;
+    border: none;
+    padding: 0.9em 2.4em;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 220px;
+  }
+  #portal-connect:hover,
+  #portal-connect:focus {
+    background: #00a844;
+  }
+</style>

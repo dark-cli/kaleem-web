@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PortalBar from '../components/PortalBar.astro';
 
 const { title, description } = Astro.props;
 const currentLocale = Astro.currentLocale;
@@ -32,5 +33,6 @@ const contentDir = currentLocale === 'ar' ? 'rtl' : 'ltr';
 			</article>
 		</main>
 		<Footer />
+		<PortalBar />
 	</body>
 </html>
