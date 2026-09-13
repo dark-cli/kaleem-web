@@ -1,75 +1,85 @@
 ---
-const theme = Astro.cookies.get('theme') || 'light';
+// ThemeToggleButton - Modern dark mode toggle
 ---
 
-<button class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
-  <svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><g><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></svg>
-  <svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/></svg>
+<button class="theme-toggle-btn" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+  <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/>
+  </svg>
 </button>
+
 <style>
 .theme-toggle-btn {
   background: none;
   border: none;
-  font-size: 1em;
+  padding: 0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  cursor: pointer;
-  height: 2.2em; width: 2.2em;
+  width: 2.2em;
+  height: 2.2em;
   color: var(--accent);
   transition: color 0.2s ease-in-out;
 }
+
 .theme-toggle-btn:hover {
   color: var(--accent-dark);
 }
-.theme-icon {
-  width: 1em; height: 1em;
+
+.sun-icon,
+.moon-icon {
+  width: 1em;
+  height: 1em;
   display: none;
-  vertical-align: middle;
-  color: inherit;
 }
-html:not([data-theme='dark']) .theme-icon.moon { display: inline; }
-html[data-theme='dark'] .theme-icon.sun { display: inline; }
+
+/* Light mode: show sun icon (to switch to dark) */
+html:not([data-theme="dark"]) .sun-icon {
+  display: block;
+}
+
+/* Dark mode: show moon icon (to switch to light) */
+html[data-theme="dark"] .moon-icon {
+  display: block;
+}
 </style>
 
 <script is:inline>
-  const getTheme = () => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  };
+// Attach click handlers to theme toggle buttons
+function attachThemeListeners() {
+  const buttons = document.querySelectorAll('.theme-toggle-btn');
 
-  const setTheme = (theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('theme', theme);
-    }
-  };
+  buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
-  const initThemeToggle = () => {
-    // Set theme on initial load
-    const initialTheme = getTheme();
-    setTheme(initialTheme);
-
-    const buttons = document.querySelectorAll('.theme-toggle-btn');
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-      });
+      html.setAttribute('data-theme', newTheme);
+      if (localStorage) {
+        localStorage.setItem('theme', newTheme);
+      }
     });
-  };
+  });
+}
 
-  // Handle both cases: DOMContentLoaded already fired or not yet fired
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThemeToggle);
-  } else {
-    initThemeToggle();
-  }
+// Attach listeners when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', attachThemeListeners);
+} else {
+  attachThemeListeners();
+}
 </script>
