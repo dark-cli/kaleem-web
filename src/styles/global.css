@@ -362,10 +362,15 @@ html[data-theme='dark'] .mobile-nav {
 }
 .mobile-utilities {
   display: flex;
-  gap: 1.4em;
+  gap: 0;
   justify-content: center;
   align-items: center;
   margin-bottom: 1.2em;
+}
+
+.mobile-utilities > * {
+  flex: 0 0 auto;
+  padding: 0 1.5em;
 }
 .mobile-links {
   display: flex;
