@@ -364,6 +364,7 @@ html[data-theme='dark'] .mobile-nav {
   display: flex;
   gap: 1.4em;
   justify-content: center;
+  align-items: center;
   margin-bottom: 1.2em;
 }
 .mobile-links {
