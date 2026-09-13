@@ -102,6 +102,30 @@ const businessSchema = {
   if (window.self !== window.top) {
     document.documentElement.classList.add('is-embedded');
   }
+
+  // Attach theme toggle handlers to all buttons (desktop + mobile)
+  function attachThemeHandlers() {
+    const buttons = document.querySelectorAll('.theme-toggle-btn');
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme') || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('theme', next);
+        }
+      });
+    });
+  }
+
+  // Attach handlers when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachThemeHandlers);
+  } else {
+    attachThemeHandlers();
+  }
 </script>
 
 <!-- Global Metadata -->
