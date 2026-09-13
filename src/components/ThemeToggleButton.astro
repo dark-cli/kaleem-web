@@ -22,16 +22,18 @@
 <style>
 .theme-toggle-btn {
   background: none;
-  border: none;
+  border: 1px solid var(--accent);
   padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.2em;
-  height: 2.2em;
+  width: 2.4em;
+  height: 2.4em;
   color: var(--accent);
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out, border-color 0.15s ease;
+  border-radius: 0.3em;
+  font-size: 1.375rem;
 }
 
 .theme-toggle-btn:hover {
